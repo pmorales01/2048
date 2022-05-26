@@ -24,7 +24,6 @@ class Tile():
         self._textpos = self._text.get_rect()
         self._textpos.centerx = self.rect.centerx
         self._textpos.centery = self.rect.centery
-        screen.blit(self._text, self._textpos)
 
     @property
     def rect(self):
@@ -33,10 +32,10 @@ class Tile():
         return pygame.Rect(left, top, self._width, self._width)
 
     def draw_border(self):
-        pygame.draw.rect(self._screen, (0, 0, 0), self.rect, self._width // 50)
+        pygame.draw.rect(self._screen, (0, 0, 0), self.rect, self._width // 50, 10)
 
     def draw(self, surface):
-        pygame.draw.rect(surface, self._color, self.rect)
+        pygame.draw.rect(surface, self._color, self.rect, self._width, 10)
         surface.blit(self._text, self._textpos)
 
     def rand_color(self):

@@ -2,7 +2,8 @@ import pygame, sys, os
 from pygame.locals import *
 
 from game.scene import (
-    TitleScene
+    TitleScene,
+    VideoGameScene
 )
 
 TILE_SIZE = 100
@@ -21,12 +22,14 @@ class Game:
         self._scenes = []
 
     def create_scenes(self):
-        self._scenes = [TitleScene(self._screen, (64, 128, 237))]
+        self._scenes = [TitleScene(self._screen, (64, 128, 237)),
+            VideoGameScene(self._screen)]
 
     def run(self):
         for scene in self._scenes:
+            scene.start_scene()
             while scene.scene_is_running:
                 for event in pygame.event.get():
-                    scene.input_event(event)
+                    scene.process_events(event)
                 scene.draw()
                 pygame.display.update()
