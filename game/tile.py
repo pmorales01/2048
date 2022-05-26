@@ -3,9 +3,6 @@ import random
 import math
 from game import game
 
-def color():
-    return (210, 180, 140)
-
 def font_size(string, width):
     for i in range(2, len(string)):
         width = width - width * 0.25
@@ -13,11 +10,11 @@ def font_size(string, width):
     return math.floor(width)
 
 class Tile():
-    def __init__(self, value, center_x, center_y, screen):
+    def __init__(self, value, center_x, center_y, screen, color=(210, 180, 140)):
         self._value = value
         self._center = pygame.Vector2(center_x, center_y)
         self._width = game.TILE_SIZE
-        self._color = color()
+        self._color = color
         self._screen = screen
         font = pygame.font.Font(None, font_size(str(value), self._width))
         self._text = font.render(str(value), True, (255, 255, 255))
@@ -37,10 +34,3 @@ class Tile():
     def draw(self, surface):
         pygame.draw.rect(surface, self._color, self.rect, self._width, 10)
         surface.blit(self._text, self._textpos)
-
-    def rand_color(self):
-        r = random.randint(0, 255)
-        g = random.randint(0, 255)
-        b = random.randint(0, 255)
-        rgb = (r, g, b)
-        self._color = rgb

@@ -2,6 +2,7 @@ import pygame, sys, os
 from .button import Button
 from pygame.locals import *
 from .tile import Tile
+from .board import Board
 
 BOARD_SIZE = None
 
@@ -29,21 +30,20 @@ class TitleScene(Scene):
         self._background_color = background_color
         self._scene_is_running = True
         self._tiles = []
-        self._buttons = [Button((450, 400), self._screen, "4 x 4"),
-            Button((450, 500), self._screen, "5 x 5"),
-            Button((450, 600), self._screen, "6 x 6")]
+        self._buttons = [Button((450, 400), self._screen, 4, "4 x 4"),
+            Button((450, 500), self._screen, 5, "5 x 5"),
+            Button((450, 600), self._screen, 6, "6 x 6")]
 
     def start_scene(self):
         self._screen.fill(self._background_color)
-        self._tiles.append(Tile(2, 200, 200, self._screen))
-        self._tiles.append(Tile(0, 350, 200, self._screen))
-        self._tiles.append(Tile(4, 500, 200, self._screen))
-        self._tiles.append(Tile(8, 650, 200, self._screen))
+        self._tiles.append(Tile(2, 200, 200, self._screen, (50,205,50)))
+        self._tiles.append(Tile(0, 350, 200, self._screen, (255,8,0)))
+        self._tiles.append(Tile(4, 500, 200, self._screen, (50,205,50)))
+        self._tiles.append(Tile(8, 650, 200, self._screen, (255,8,0)))
 
     def draw(self):
         super().draw()
         for tile in self._tiles:
-            tile.rand_color()
             tile.draw(self._screen)
             tile.draw_border()
 
@@ -54,29 +54,29 @@ class TitleScene(Scene):
     def scene_is_running(self):
         return self._scene_is_running
 
-    @property
-    def choice(self):
-        return self._choice
-
     def process_events(self, event):
         super().process_events(event)
-        for i in range (0, len(self._buttons)):
-            self._buttons[i].process_events(event)
-            if self._buttons[i].pressed:
+        for button in self._buttons:
+            button.process_events(event)
+            if button.pressed:
                 self._scene_is_running = False
                 global BOARD_SIZE
-                BOARD_SIZE = i + 4
+                BOARD_SIZE = button.value
 
 class VideoGameScene(Scene):
     def __init__(self, screen):
         self._board_size = BOARD_SIZE
         self._screen = screen
         self._scene_is_running = True
+        self._board = Board(self._screen, self._board_size)
 
     @property
     def scene_is_running(self):
         return self._scene_is_running
 
     def start_scene(self):
-        self._screen.fill((251, 248, 239))
+        self._screen.fill((250, 221, 185))
         self._board_size = BOARD_SIZE
+
+    def draw(self):
+        self._board.draw()

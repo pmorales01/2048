@@ -1,13 +1,14 @@
 import pygame
 
 class Button:
-    def __init__(self, center, screen, text, width=100, height=50, color=(255, 0, 0)):
+    def __init__(self, center, screen, value, text, width=100, height=50, color=(255, 0, 0)):
         self._center = center
         self._screen = screen
         self._width = width
         self._height = height
         self._color = color
         self._original_color = color
+        self._value = value
         font = pygame.font.Font(None, self._height)
         self._text = font.render(text, True, (255, 255, 255))
         self._textpos = self._text.get_rect()
@@ -21,6 +22,10 @@ class Button:
         top = self._center[1] - self._height
         return pygame.Rect(left, top, self._width, self._height)
 
+    @property
+    def value(self):
+        return self._value
+        
     @property
     def pressed(self):
         return self._pressed
