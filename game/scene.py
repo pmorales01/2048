@@ -68,15 +68,22 @@ class VideoGameScene(Scene):
         self._board_size = BOARD_SIZE
         self._screen = screen
         self._scene_is_running = True
-        self._board = Board(self._screen, self._board_size)
+        self._board = None
 
     @property
     def scene_is_running(self):
         return self._scene_is_running
 
     def start_scene(self):
+        self._board_size = BOARD_SIZE
+        self._board = Board(self._screen, self._board_size)
         self._screen.fill((250, 221, 185))
         self._board_size = BOARD_SIZE
+        self._board.initialize_tiles()
 
     def draw(self):
         self._board.draw()
+
+    def process_events(self, event):
+        super().process_events(event)
+        self._board.process_events(event)

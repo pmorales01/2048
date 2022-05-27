@@ -25,7 +25,7 @@ class Button:
     @property
     def value(self):
         return self._value
-        
+
     @property
     def pressed(self):
         return self._pressed

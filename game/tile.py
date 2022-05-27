@@ -10,10 +10,10 @@ def font_size(string, width):
     return math.floor(width)
 
 class Tile():
-    def __init__(self, value, center_x, center_y, screen, color=(210, 180, 140)):
+    def __init__(self, value, center_x, center_y, screen, color=(210, 180, 140), size=100):
         self._value = value
         self._center = pygame.Vector2(center_x, center_y)
-        self._width = game.TILE_SIZE
+        self._width = size
         self._color = color
         self._screen = screen
         font = pygame.font.Font(None, font_size(str(value), self._width))
@@ -24,8 +24,8 @@ class Tile():
 
     @property
     def rect(self):
-        left = self._center[0] - game.TILE_SIZE
-        top = self._center[1] - game.TILE_SIZE
+        left = self._center[0] - self._width
+        top = self._center[1] - self._width
         return pygame.Rect(left, top, self._width, self._width)
 
     def draw_border(self):

@@ -6,8 +6,6 @@ from game.scene import (
     VideoGameScene
 )
 
-TILE_SIZE = 100
-
 class Game:
     def __init__(self,
     height=800,
