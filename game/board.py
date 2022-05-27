@@ -38,7 +38,15 @@ class Board:
         self.tile_positions()
         step = 500 // self._size
         for position in self._positions:
-            self._tiles.append(Tile(0, position[0], position[1], self._screen, (255, 0, 0), step))
+            self._tiles.append(Tile(None, position[0], position[1], self._screen, (204, 193, 180), step))
+
+        # select 2 random tiles to start the game
+        tiles = random.choices(self._tiles, k=2)
+        tiles[0].update_color((238, 228, 218))
+        tiles[0].update_value(2, (119, 110, 101))
+        tiles[1].update_color((238, 228, 218))
+        tiles[1].update_value(2, (119, 110, 101))
 
     def process_events(self, event):
-        print(pygame.mouse.get_pos())
+        #print(pygame.mouse.get_pos())
+        pass

@@ -16,8 +16,8 @@ class Tile():
         self._width = size
         self._color = color
         self._screen = screen
-        font = pygame.font.Font(None, font_size(str(value), self._width))
-        self._text = font.render(str(value), True, (255, 255, 255))
+        font = pygame.font.Font(None, font_size(str(self._value), self._width))
+        self._text = font.render(str(self._value), True, (255, 255, 255))
         self._textpos = self._text.get_rect()
         self._textpos.centerx = self.rect.centerx
         self._textpos.centery = self.rect.centery
@@ -33,4 +33,22 @@ class Tile():
 
     def draw(self, surface):
         pygame.draw.rect(surface, self._color, self.rect, self._width, 10)
-        surface.blit(self._text, self._textpos)
+        if self._value != None:
+            surface.blit(self._text, self._textpos)
+
+    def update_value(self, value, color):
+        self._value = value
+        self.update_text(color)
+
+    def update_text(self, color):
+        font = pygame.font.Font(None, font_size(str(self._value), self._width))
+        self._text = font.render(str(self._value), True, color)
+        self._textpos = self._text.get_rect()
+        self._textpos.centerx = self.rect.centerx
+        self._textpos.centery = self.rect.centery
+
+    def update_color(self, color):
+        self._color = color
+
+    def __repr__(self):
+        return f'center: {self._center}'
