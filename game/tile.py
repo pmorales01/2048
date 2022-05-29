@@ -28,6 +28,18 @@ class Tile():
         top = self._center[1] - self._width
         return pygame.Rect(left, top, self._width, self._width)
 
+    @property
+    def center(self):
+        return self._center
+
+    @property
+    def value(self):
+        return self._value
+
+    @property
+    def width(self):
+        return self._width
+
     def draw_border(self):
         pygame.draw.rect(self._screen, (0, 0, 0), self.rect, self._width // 50, 10)
 
@@ -49,6 +61,16 @@ class Tile():
 
     def update_color(self, color):
         self._color = color
+
+    def update_center(self, center):
+        self._center = pygame.Vector2(center[0], center[1])
+        self._textpos.centerx = self.rect.centerx
+        self._textpos.centery = self.rect.centery
+
+    def move(self, other_tile):
+        self._center = other_tile.center
+        self._textpos.centerx = other_tile.rect.centerx
+        self._textpos.centery = other_tile.rect.centery
 
     def __repr__(self):
         return f'center: {self._center}'
