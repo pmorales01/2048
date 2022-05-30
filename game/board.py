@@ -51,15 +51,43 @@ class Board:
                 self._default_tiles[i][j] = Tile(None, position[0], position[1], self._screen, (204, 193, 180), step)
 
         # select 2 random tiles to start the game
-        tile_1 = self._tiles[random.choice(range(self._size))][random.choice(range(self._size))]
-        tile_2 = self._tiles[random.choice(range(self._size))][random.choice(range(self._size))]
+        # tile_1 = self._tiles[random.choice(range(self._size))][random.choice(range(self._size))]
+        # tile_2 = self._tiles[random.choice(range(self._size))][random.choice(range(self._size))]
+        # tile_1.update_color((238, 228, 218))
+        # tile_1.update_value(2, (119, 110, 101))
+        # tile_2.update_color((238, 228, 218))
+        # tile_2.update_value(2, (119, 110, 101))
+
+        tile_1 = self._tiles[1][3]
+        tile_2 = self._tiles[1][0]
         tile_1.update_color((238, 228, 218))
         tile_1.update_value(2, (119, 110, 101))
         tile_2.update_color((238, 228, 218))
         tile_2.update_value(2, (119, 110, 101))
 
-    def has_neighbors(self, tile):
-        pass
+    def no_adjacent_tile(self, tile_a, tile_b):
+        i,j = tile_a
+        current_tile = self._tiles[i][j]
+
+        x,y = tile_b
+        other_tile = self._tiles[x][y]
+
+        other_center = self._tiles[x][y].center
+        self._tiles[x][y] = self._tiles[i][j]
+        self._tiles[x][y].update_center(other_center)
+        x,y = current_tile.center
+        self._tiles[i][j] = Tile(None, x,y, self._screen, (204, 193, 180), current_tile.width)
+
+    def combine_tiles(self, tile_a, tile_b):
+        i,j = tile_a
+        current = self._tiles[i][j]
+
+        x,y = tile_b
+        other = self._tiles[x][y]
+
+        other.update_value((other.value + current.value), (255, 0, 0))
+        x,y = current.center
+        self._tiles[i][j] = Tile(None, x, y, self._screen, (204, 193, 180), current.width)
 
     def move_right(self):
         for i in range(0, self._size):
@@ -70,32 +98,45 @@ class Board:
                     j += 1
                     continue
 
-                current = self._tiles[i][j]
-                other = self._tiles[i][j + 1]
-                if other.value == None:
-                    other_center = self._tiles[i][j + 1].center
-                    self._tiles[i][j + 1] = self._tiles[i][j]
-                    self._tiles[i][j + 1].update_center(other_center)
-                    position = current.center
-                    self._tiles[i][j] = Tile(None, position[0], position[1], self._screen, (204, 193, 180), current.width)
-                elif other.value == current.value:
-                    other.update_value((other.value + current.value), (255, 0, 0))
-                    position = current.center
-                    self._tiles[i][j] = Tile(None, position[0], position[1], self._screen, (204, 193, 180), current.width)
+                if self._tiles[i][j + 1].value == None:
+                    self.no_adjacent_tile((i, j), (i, j + 1))
+                elif self._tiles[i][j + 1].value == self._tiles[i][j].value:
+                    self.combine_tiles((i, j), (i, j + 1))
+
                 j += 1
 
     def move_left(self):
-        print("move left")
-        for i in range(self._size):
-            for j in range(self._size):
-                if (j - 1) >= 0:
-                    self._tiles[i][j].move(self._tiles[i][j - 1])
+        for i in range(0, self._size):
+            j = self._size - 1
+            while j - 1 >= 1 and \
+                ((self._tiles[i][j - 1].value == self._tiles[i][j].value) or (self._tiles[i][j - 1].value == None) or self._tiles[i][j].value == None):
+                if self._tiles[i][j].value == None:
+                    j -= 1
+                    continue
+
+                if self._tiles[i][j - 1].value == None:
+                    self.no_adjacent_tile((i, j), (i, j - 1))
+                elif self._tiles[i][j - 1].value == self._tiles[i][j].value:
+                    self.combine_tiles((i, j), (i, j - 1))
+                    
+                j -= 1
+
 
     def move_down(self):
-        for i in range(self._size):
-            for j in range(self._size):
-                if (i + 1) != self._size and (self._tiles[i][j]):
-                    self._tiles[i][j].move(self._tiles[i + 1][j])
+        for j in range(0, self._size):
+            i = 0
+            while i + 1 <= self._size - 1 and \
+                ((self._tiles[i + 1][j].value == self._tiles[i][j].value) or (self._tiles[i + 1][j].value == None) or self._tiles[i][j].value == None):
+                if self._tiles[i][j].value == None:
+                    i += 1
+                    continue
+                if self._tiles[i + 1][j].value == None:
+                    self.no_adjacent_tile((i, j), (i + 1, j))
+                elif self._tiles[i + 1][j].value == self._tiles[i][j].value:
+                    self.combine_tiles((i, j), (i + 1, j))
+
+                i += 1
+
 
     def process_events(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:

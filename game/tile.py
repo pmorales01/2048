@@ -73,4 +73,4 @@ class Tile():
         self._textpos.centery = other_tile.rect.centery
 
     def __repr__(self):
-        return f'center: {self._center}'
+        return f'center: {self._center}, value: {self._value}'
