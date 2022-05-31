@@ -59,11 +59,14 @@ class Board:
         # tile_2.update_value(2, (119, 110, 101))
 
         tile_1 = self._tiles[1][3]
-        tile_2 = self._tiles[1][0]
+        tile_2 = self._tiles[1][2]
         tile_1.update_color((238, 228, 218))
         tile_1.update_value(2, (119, 110, 101))
         tile_2.update_color((238, 228, 218))
         tile_2.update_value(2, (119, 110, 101))
+        tile_3 = self._tiles[1][0]
+        tile_3.update_color((238, 228, 218))
+        tile_3.update_value(8, (119, 110, 101))
 
     def no_adjacent_tile(self, tile_a, tile_b):
         i,j = tile_a
@@ -91,52 +94,48 @@ class Board:
 
     def move_right(self):
         for i in range(0, self._size):
-            j = 0
-            while j + 1 <= self._size - 1 and \
-                ((self._tiles[i][j + 1].value == self._tiles[i][j].value) or (self._tiles[i][j + 1].value == None) or self._tiles[i][j].value == None):
-                if self._tiles[i][j].value == None:
-                    j += 1
-                    continue
-
-                if self._tiles[i][j + 1].value == None:
-                    self.no_adjacent_tile((i, j), (i, j + 1))
-                elif self._tiles[i][j + 1].value == self._tiles[i][j].value:
-                    self.combine_tiles((i, j), (i, j + 1))
-
-                j += 1
+            for k in range(0, self._size):
+                for j in range(0, self._size - 1):
+                    if j + 1 <= self._size:
+                        if self._tiles[i][j + 1].value == self._tiles[i][j].value:
+                            if self._tiles[i][j].value != None:
+                                self.combine_tiles((i, j), (i, j + 1))
+                        elif self._tiles[i][j + 1].value == None:
+                            self.no_adjacent_tile((i, j), (i, j + 1))
 
     def move_left(self):
+        print("move left")
         for i in range(0, self._size):
-            j = self._size - 1
-            while j - 1 >= 1 and \
-                ((self._tiles[i][j - 1].value == self._tiles[i][j].value) or (self._tiles[i][j - 1].value == None) or self._tiles[i][j].value == None):
-                if self._tiles[i][j].value == None:
-                    j -= 1
-                    continue
-
-                if self._tiles[i][j - 1].value == None:
-                    self.no_adjacent_tile((i, j), (i, j - 1))
-                elif self._tiles[i][j - 1].value == self._tiles[i][j].value:
-                    self.combine_tiles((i, j), (i, j - 1))
-                    
-                j -= 1
-
+            for k in range(0, self._size):
+                for j in range(self._size - 1, 0, -1):
+                    if j - 1 >= 0:
+                        if self._tiles[i][j - 1].value == self._tiles[i][j].value:
+                            if self._tiles[i][j].value != None:
+                                self.combine_tiles((i, j), (i, j - 1))
+                        elif self._tiles[i][j - 1].value == None:
+                            self.no_adjacent_tile((i, j), (i, j - 1))
 
     def move_down(self):
         for j in range(0, self._size):
-            i = 0
-            while i + 1 <= self._size - 1 and \
-                ((self._tiles[i + 1][j].value == self._tiles[i][j].value) or (self._tiles[i + 1][j].value == None) or self._tiles[i][j].value == None):
-                if self._tiles[i][j].value == None:
-                    i += 1
-                    continue
-                if self._tiles[i + 1][j].value == None:
-                    self.no_adjacent_tile((i, j), (i + 1, j))
-                elif self._tiles[i + 1][j].value == self._tiles[i][j].value:
-                    self.combine_tiles((i, j), (i + 1, j))
+            for k in range(0, self._size):
+                for i in range(0, self._size - 1):
+                    if i + 1 <= self._size:
+                        if self._tiles[i + 1][j].value == self._tiles[i][j].value:
+                            if self._tiles[i][j].value != None:
+                                self.combine_tiles((i, j), (i + 1, j))
+                        elif self._tiles[i + 1][j].value == None:
+                            self.no_adjacent_tile((i, j), (i + 1, j))
 
-                i += 1
-
+    def move_up(self):
+        for j in range(0, self._size):
+            for k in range(0, self._size):
+                for i in range(self._size - 1, -1, -1):
+                    if i - 1 >= 0:
+                        if self._tiles[i - 1][j].value == self._tiles[i][j].value:
+                            if self._tiles[i][j].value != None:
+                                self.combine_tiles((i, j), (i - 1, j))
+                        elif self._tiles[i - 1][j].value == None:
+                            self.no_adjacent_tile((i, j), (i - 1, j))
 
     def process_events(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
@@ -145,3 +144,5 @@ class Board:
             self.move_left()
         elif event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
             self.move_down()
+        elif event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
+            self.move_up()
