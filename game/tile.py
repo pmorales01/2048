@@ -40,6 +40,10 @@ class Tile():
     def width(self):
         return self._width
 
+    @property
+    def color(self):
+        return self._color
+
     def draw_border(self):
         pygame.draw.rect(self._screen, (0, 0, 0), self.rect, self._width // 50, 10)
 
@@ -67,10 +71,10 @@ class Tile():
         self._textpos.centerx = self.rect.centerx
         self._textpos.centery = self.rect.centery
 
-    def move(self, other_tile):
-        self._center = other_tile.center
-        self._textpos.centerx = other_tile.rect.centerx
-        self._textpos.centery = other_tile.rect.centery
+    def clear_value(self):
+        self._value = None
+
 
     def __repr__(self):
-        return f'center: {self._center}, value: {self._value}'
+        #return f'center: {self._center}, value: {self._value}'
+        return f'{self._value}'
