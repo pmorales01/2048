@@ -76,5 +76,4 @@ class Tile():
 
 
     def __repr__(self):
-        #return f'center: {self._center}, value: {self._value}'
-        return f'{self._value}'
+        return f'center: {self._center}, value: {self._value}'
