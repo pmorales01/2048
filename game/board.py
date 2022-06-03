@@ -1,6 +1,7 @@
 import pygame
 import random
 from .tile import Tile
+from .colors import COLORS
 
 # counts the number of available moves
 RIGHT_AVAILABLE = 0
@@ -70,11 +71,19 @@ class Board:
 
         self._tiles[x][y].update_value(current.value, (119, 110, 101))
         self._tiles[x][y].update_center(other_center)
-        self._tiles[x][y].update_color((238, 228, 218))
+        self._tiles[x][y].update_color(current.color)
 
         x,y = current.center
 
         self._tiles[i][j] = Tile(None, x, y, self._screen, (204, 193, 180), current.width)
+
+    def calculate_n(self, number):
+        n = 0
+        while number != 1:
+            n += 1
+            number = number // 2
+
+        return n
 
     def combine_tiles(self, current_cord, other_cord):
         i,j = current_cord
@@ -83,7 +92,10 @@ class Board:
         x,y = other_cord
         other = self._tiles[x][y]
 
-        other.update_value((other.value + current.value), (0, 0, 0))
+        n = self.calculate_n(other.value + current.value) - 2
+
+        other.update_value((other.value + current.value), (119, 110, 101))
+        other.update_color(COLORS[n])
         x,y = current.center
         self._tiles[i][j] = Tile(None, x, y, self._screen, (204, 193, 180), current.width)
 
