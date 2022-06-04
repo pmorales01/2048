@@ -2,6 +2,8 @@ import pygame
 import random
 from .tile import Tile
 from .colors import COLORS
+from .pop_up import PopUp
+from .button import Button
 
 # counts the number of available moves
 RIGHT_AVAILABLE = 0
@@ -15,6 +17,10 @@ class Board:
         self._size = size
         self._tiles = [[None for x in range(self._size)] for x in range(self._size)]
         self._positions = [[None for x in range(self._size)] for x in range(self._size)]
+        self._popup = PopUp(self._screen, "GAME OVER", (400, 400))
+        self._popup.add_button(Button((350, 525), self._screen, None, "Quit"))
+        self._popup.add_button(Button((550, 525), self._screen, None, "Retry"))
+        self._game_is_over = False
 
     @property
     def rect(self):
@@ -42,6 +48,9 @@ class Board:
         for i in range(0, self._size):
             for j in range(0, self._size):
                 self._tiles[i][j].draw(self._screen)
+
+        if self._game_is_over:
+            self._popup.draw()
 
     def initialize_tiles(self):
         self.tile_positions()
@@ -234,6 +243,7 @@ class Board:
             if RIGHT_AVAILABLE == 0 and LEFT_AVAILABLE == 0 and \
                 UP_AVAILABLE == 0 and DOWN_AVAILABLE == 0:
                 print("Game Over")
+                self._game_is_over = True
 
     def process_events(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
@@ -252,3 +262,6 @@ class Board:
             self.move_up()
             if UP_AVAILABLE != 0:
                 self.add_random_tile()
+
+        if self._game_is_over:
+            self._popup.process_events(event)
