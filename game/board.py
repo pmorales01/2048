@@ -3,6 +3,7 @@ import random
 from .tile import Tile
 from .colors import COLORS
 from .pop_up import PopUp
+import game.pop_up as popup
 from .button import Button
 
 # counts the number of available moves
@@ -18,9 +19,11 @@ class Board:
         self._tiles = [[None for x in range(self._size)] for x in range(self._size)]
         self._positions = [[None for x in range(self._size)] for x in range(self._size)]
         self._popup = PopUp(self._screen, "GAME OVER", (400, 400))
-        self._popup.add_button(Button((350, 525), self._screen, None, "Quit"))
-        self._popup.add_button(Button((550, 525), self._screen, None, "Retry"))
+        self._popup.add_button(Button((350, 525), self._screen, "quit", "Quit"))
+        self._popup.add_button(Button((550, 525), self._screen, "retry", "Retry"))
         self._game_is_over = False
+        self._exit_game = False
+        self._score = 0
 
     @property
     def rect(self):
@@ -102,6 +105,11 @@ class Board:
         other = self._tiles[x][y]
 
         n = self.calculate_n(other.value + current.value) - 2
+
+        if n >= len(COLORS):
+            n = 0
+
+        self._score += other.value + current.value
 
         other.update_value((other.value + current.value), (119, 110, 101))
         other.update_color(COLORS[n])
@@ -245,6 +253,10 @@ class Board:
                 print("Game Over")
                 self._game_is_over = True
 
+    @property
+    def exit_game(self):
+        return self._exit_game
+
     def process_events(self, event):
         if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
             self.move_right()
@@ -265,3 +277,13 @@ class Board:
 
         if self._game_is_over:
             self._popup.process_events(event)
+            print("ACTION = ", popup.ACTION)
+            if popup.ACTION == "quit":
+                self._exit_game = True
+            elif popup.ACTION == "retry":
+                self.initialize_tiles()
+                self._game_is_over = False
+                self._exit_game = False
+                self._score = 0
+                global popup.ACTION
+                popup.ACTION = None

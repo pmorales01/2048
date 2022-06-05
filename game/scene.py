@@ -87,3 +87,5 @@ class VideoGameScene(Scene):
     def process_events(self, event):
         super().process_events(event)
         self._board.process_events(event)
+        if self._board.exit_game:
+            self._scene_is_running = False 

@@ -1,6 +1,8 @@
 import pygame
 from .button import Button
 
+ACTION = None
+
 class PopUp:
     def __init__(self, screen, message, position, size=(400, 300)):
         self._screen = screen
@@ -39,3 +41,7 @@ class PopUp:
     def process_events(self, event):
         for button in self._buttons:
             button.process_events(event)
+            if button.pressed:
+                global ACTION
+                ACTION = button.value
+                print("FROM POPUP: ACTION =", ACTION, "value = ", button.value)
