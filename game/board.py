@@ -277,7 +277,6 @@ class Board:
 
         if self._game_is_over:
             self._popup.process_events(event)
-            print("ACTION = ", popup.ACTION)
             if popup.ACTION == "quit":
                 self._exit_game = True
             elif popup.ACTION == "retry":
@@ -285,5 +284,4 @@ class Board:
                 self._game_is_over = False
                 self._exit_game = False
                 self._score = 0
-                global popup.ACTION
                 popup.ACTION = None

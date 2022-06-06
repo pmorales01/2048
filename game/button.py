@@ -30,6 +30,9 @@ class Button:
     def pressed(self):
         return self._pressed
 
+    def unpress(self):
+        self._pressed = False
+
     def draw_border(self, surface):
         pygame.draw.rect(surface, (0, 0, 0), self.rect, self._width // 50, 10)
 

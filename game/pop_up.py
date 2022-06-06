@@ -44,4 +44,4 @@ class PopUp:
             if button.pressed:
                 global ACTION
                 ACTION = button.value
-                print("FROM POPUP: ACTION =", ACTION, "value = ", button.value)
+                button.unpress()
