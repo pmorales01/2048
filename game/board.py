@@ -81,7 +81,7 @@ class Board:
 
         other_center = other.center
 
-        self._tiles[x][y].update_value(current.value, (119, 110, 101))
+        self._tiles[x][y].update_value(current.value, current.text_color)
         self._tiles[x][y].update_center(other_center)
         self._tiles[x][y].update_color(current.color)
 
@@ -104,15 +104,15 @@ class Board:
         x,y = other_cord
         other = self._tiles[x][y]
 
-        n = self.calculate_n(other.value + current.value) - 2
+        n = self.calculate_n(other.value + current.value) - 1
 
         if n >= len(COLORS):
-            n = 0
+            n = len(COLORS) - 1
 
         self._score += other.value + current.value
-
-        other.update_value((other.value + current.value), (119, 110, 101))
-        other.update_color(COLORS[n])
+        color_pair = COLORS[n]
+        other.update_value((other.value + current.value), color_pair[1])
+        other.update_color(color_pair[0])
         x,y = current.center
         self._tiles[i][j] = Tile(None, x, y, self._screen, (204, 193, 180), current.width)
 
