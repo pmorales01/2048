@@ -1,6 +1,6 @@
 import pygame
 import random
-from .tile import Tile
+from .tile import Tile, font_size
 from .colors import COLORS
 from .pop_up import PopUp
 import game.pop_up as popup
@@ -24,10 +24,20 @@ class Board:
         self._game_is_over = False
         self._exit_game = False
         self._score = 0
+        font = pygame.font.Font(None, font_size(str(self._score), 100))
+        self._text_color = (255, 255, 255)
+        self._text = font.render(str(self._score), True, self._text_color)
+        self._textpos = self._text.get_rect()
+        self._textpos.centerx = self.score_rect.centerx
+        self._textpos.centery = self.score_rect.centery
 
     @property
     def rect(self):
         return pygame.Rect(100, 150, 600, 600)
+
+    @property
+    def score_rect(self):
+        return pygame.Rect(500, 50, 100, 50)
 
     def tile_positions(self):
         step = 500 // self._size
@@ -44,6 +54,17 @@ class Board:
                 y_pos += step
             y_pos = 150 + step
 
+    def draw_score(self):
+        pygame.draw.rect(self._screen, (188,172,160), self.score_rect)
+        self._screen.blit(self._text, self._textpos)
+
+    def update_score(self):
+        font = pygame.font.Font(None, font_size(str(self._score), 100))
+        self._text = font.render(str(self._score), True, (255, 255, 255))
+        self._textpos = self._text.get_rect()
+        self._textpos.centerx = self.score_rect.centerx
+        self._textpos.centery = self.score_rect.centery
+
     def draw(self):
         self._screen.fill((250, 221, 185))
         pygame.draw.rect(self._screen, (188,172,160), self.rect, 600, 10)
@@ -51,6 +72,8 @@ class Board:
         for i in range(0, self._size):
             for j in range(0, self._size):
                 self._tiles[i][j].draw(self._screen)
+
+        self.draw_score()
 
         if self._game_is_over:
             self._popup.draw()
@@ -104,12 +127,13 @@ class Board:
         x,y = other_cord
         other = self._tiles[x][y]
 
-        n = self.calculate_n(other.value + current.value) - 1
+        n = self.calculate_n(other.value + current.value) - 2
 
         if n >= len(COLORS):
             n = len(COLORS) - 1
 
         self._score += other.value + current.value
+        self.update_score()
         color_pair = COLORS[n]
         other.update_value((other.value + current.value), color_pair[1])
         other.update_color(color_pair[0])
