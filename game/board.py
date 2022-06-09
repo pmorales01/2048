@@ -95,7 +95,10 @@ class Board:
         tile_2.update_color((238, 228, 218))
         tile_2.update_value(2, (119, 110, 101))
 
-    def next_tile_is_none(self, current_cord, other_cord):
+    def next_tile_is_none(self, current_cord, other_cord, execute_move):
+        if not execute_move:
+            return
+
         i,j = current_cord
         current = self._tiles[i][j]
 
@@ -120,7 +123,10 @@ class Board:
 
         return n
 
-    def combine_tiles(self, current_cord, other_cord):
+    def combine_tiles(self, current_cord, other_cord, execute_move):
+        if not execute_move:
+            return
+
         i,j = current_cord
         current = self._tiles[i][j]
 
@@ -140,7 +146,7 @@ class Board:
         x,y = current.center
         self._tiles[i][j] = Tile(None, x, y, self._screen, (204, 193, 180), current.width)
 
-    def move_right(self):
+    def move_right(self, execute_move=True):
         global RIGHT_AVAILABLE
         RIGHT_AVAILABLE = 0
         for i in range(0, self._size):
@@ -149,14 +155,14 @@ class Board:
                     if j + 1 <= self._size - 1:
                         if self._tiles[i][j + 1].value == self._tiles[i][j].value:
                             if self._tiles[i][j].value != None:
-                                self.combine_tiles((i, j), (i, j + 1))
+                                self.combine_tiles((i, j), (i, j + 1), execute_move)
                                 RIGHT_AVAILABLE += 1
                         elif self._tiles[i][j + 1].value == None:
-                            self.next_tile_is_none((i, j), (i, j + 1))
+                            self.next_tile_is_none((i, j), (i, j + 1), execute_move)
                             RIGHT_AVAILABLE += 1
 
 
-    def move_left(self):
+    def move_left(self, execute_move=True):
         global LEFT_AVAILABLE
         LEFT_AVAILABLE = 0
         for i in range(0, self._size):
@@ -165,13 +171,13 @@ class Board:
                     if j - 1 >= 0:
                         if self._tiles[i][j - 1].value == self._tiles[i][j].value:
                             if self._tiles[i][j].value != None:
-                                self.combine_tiles((i, j), (i, j - 1))
+                                self.combine_tiles((i, j), (i, j - 1), execute_move)
                                 LEFT_AVAILABLE += 1
                         elif self._tiles[i][j - 1].value == None:
-                            self.next_tile_is_none((i, j), (i, j - 1))
+                            self.next_tile_is_none((i, j), (i, j - 1), execute_move)
                             LEFT_AVAILABLE += 1
 
-    def move_down(self):
+    def move_down(self, execute_move=True):
         global DOWN_AVAILABLE
         DOWN_AVAILABLE = 0
         for j in range(0, self._size):
@@ -180,13 +186,13 @@ class Board:
                     if i + 1 <= self._size:
                         if self._tiles[i + 1][j].value == self._tiles[i][j].value:
                             if self._tiles[i][j].value != None:
-                                self.combine_tiles((i, j), (i + 1, j))
+                                self.combine_tiles((i, j), (i + 1, j), execute_move)
                                 DOWN_AVAILABLE += 1
                         elif self._tiles[i + 1][j].value == None:
-                            self.next_tile_is_none((i, j), (i + 1, j))
+                            self.next_tile_is_none((i, j), (i + 1, j), execute_move)
                             DOWN_AVAILABLE += 1
 
-    def move_up(self):
+    def move_up(self, execute_move=True):
         global UP_AVAILABLE
         UP_AVAILABLE = 0
         for j in range(0, self._size):
@@ -195,64 +201,24 @@ class Board:
                     if i - 1 >= 0:
                         if self._tiles[i - 1][j].value == self._tiles[i][j].value:
                             if self._tiles[i][j].value != None:
-                                self.combine_tiles((i, j), (i - 1, j))
+                                self.combine_tiles((i, j), (i - 1, j), execute_move)
                                 UP_AVAILABLE += 1
                         elif self._tiles[i - 1][j].value == None:
-                            self.next_tile_is_none((i, j), (i - 1, j))
+                            self.next_tile_is_none((i, j), (i - 1, j), execute_move)
                             UP_AVAILABLE += 1
 
     def check_available_moves(self):
         # move right
-        global RIGHT_AVAILABLE
-        RIGHT_AVAILABLE = 0
-        for i in range(0, self._size):
-            for k in range(0, self._size):
-                for j in range(0, self._size - 1):
-                    if j + 1 <= self._size - 1:
-                        if self._tiles[i][j + 1].value == self._tiles[i][j].value:
-                            if self._tiles[i][j].value != None:
-                                RIGHT_AVAILABLE += 1
-                        elif self._tiles[i][j + 1].value == None:
-                            RIGHT_AVAILABLE += 1
+        self.move_right(False)
 
         # move left
-        global LEFT_AVAILABLE
-        LEFT_AVAILABLE = 0
-        for i in range(0, self._size):
-            for k in range(0, self._size):
-                for j in range(self._size - 1, 0, -1):
-                    if j - 1 >= 0:
-                        if self._tiles[i][j - 1].value == self._tiles[i][j].value:
-                            if self._tiles[i][j].value != None:
-                                LEFT_AVAILABLE += 1
-                        elif self._tiles[i][j - 1].value == None:
-                            LEFT_AVAILABLE += 1
+        self.move_left(False)
 
         # move down
-        global DOWN_AVAILABLE
-        DOWN_AVAILABLE = 0
-        for j in range(0, self._size):
-            for k in range(0, self._size):
-                for i in range(0, self._size - 1):
-                    if i + 1 <= self._size:
-                        if self._tiles[i + 1][j].value == self._tiles[i][j].value:
-                            if self._tiles[i][j].value != None:
-                                DOWN_AVAILABLE += 1
-                        elif self._tiles[i + 1][j].value == None:
-                            DOWN_AVAILABLE += 1
+        self.move_down(False)
 
         # move up
-        global UP_AVAILABLE
-        UP_AVAILABLE = 0
-        for j in range(0, self._size):
-            for k in range(0, self._size):
-                for i in range(self._size - 1, 0, -1):
-                    if i - 1 >= 0:
-                        if self._tiles[i - 1][j].value == self._tiles[i][j].value:
-                            if self._tiles[i][j].value != None:
-                                UP_AVAILABLE += 1
-                        elif self._tiles[i - 1][j].value == None:
-                            UP_AVAILABLE += 1
+        self.move_up(False)
 
     def add_random_tile(self):
         empty_tiles = []
