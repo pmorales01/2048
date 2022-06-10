@@ -24,12 +24,13 @@ class Board:
         self._game_is_over = False
         self._exit_game = False
         self._score = 0
-        font = pygame.font.Font(None, font_size(str(self._score), 100))
+        font = pygame.font.Font(None, font_size(str(self._score), 50))
         self._text_color = (255, 255, 255)
         self._text = font.render(str(self._score), True, self._text_color)
         self._textpos = self._text.get_rect()
         self._textpos.centerx = self.score_rect.centerx
-        self._textpos.centery = self.score_rect.centery
+        self._textpos.centery = self.score_rect.centery + 10
+        self._new_game = Button((675, 140), self._screen, None, "New", color=(124,103,83), border_on=False)
 
     @property
     def rect(self):
@@ -37,7 +38,7 @@ class Board:
 
     @property
     def score_rect(self):
-        return pygame.Rect(500, 50, 100, 50)
+        return pygame.Rect(575, 25, 100, 50)
 
     def tile_positions(self):
         step = 500 // self._size
@@ -55,15 +56,21 @@ class Board:
             y_pos = 150 + step
 
     def draw_score(self):
-        pygame.draw.rect(self._screen, (188,172,160), self.score_rect)
+        font = pygame.font.Font(None, 25)
+        text = font.render("SCORE", True, self._text_color)
+        textpos = text.get_rect()
+        textpos.centerx = self.score_rect.centerx
+        textpos.centery = self.score_rect.centery - 15
+        pygame.draw.rect(self._screen, (188,172,160), self.score_rect, 100, 15)
         self._screen.blit(self._text, self._textpos)
+        self._screen.blit(text, textpos)
 
     def update_score(self):
-        font = pygame.font.Font(None, font_size(str(self._score), 100))
+        font = pygame.font.Font(None, font_size(str(self._score), 50))
         self._text = font.render(str(self._score), True, (255, 255, 255))
         self._textpos = self._text.get_rect()
         self._textpos.centerx = self.score_rect.centerx
-        self._textpos.centery = self.score_rect.centery
+        self._textpos.centery = self.score_rect.centery + 10
 
     def draw(self):
         self._screen.fill((250, 221, 185))
@@ -74,6 +81,8 @@ class Board:
                 self._tiles[i][j].draw(self._screen)
 
         self.draw_score()
+
+        self._new_game.draw(self._screen)
 
         if self._game_is_over:
             self._popup.draw()
@@ -90,6 +99,12 @@ class Board:
         # select 2 random tiles to start the game
         tile_1 = self._tiles[random.choice(range(self._size))][random.choice(range(self._size))]
         tile_2 = self._tiles[random.choice(range(self._size))][random.choice(range(self._size))]
+
+        while tile_1.center == tile_2.center:
+            print("we are the same")
+            tile_1 = self._tiles[random.choice(range(self._size))][random.choice(range(self._size))]
+            tile_2 = self._tiles[random.choice(range(self._size))][random.choice(range(self._size))]
+
         tile_1.update_color((238, 228, 218))
         tile_1.update_value(2, (119, 110, 101))
         tile_2.update_color((238, 228, 218))
@@ -208,16 +223,9 @@ class Board:
                             UP_AVAILABLE += 1
 
     def check_available_moves(self):
-        # move right
         self.move_right(False)
-
-        # move left
         self.move_left(False)
-
-        # move down
         self.move_down(False)
-
-        # move up
         self.move_up(False)
 
     def add_random_tile(self):
@@ -248,6 +256,13 @@ class Board:
         return self._exit_game
 
     def process_events(self, event):
+        self._new_game.process_events(event)
+        if self._new_game.pressed:
+            self.initialize_tiles()
+            self._score = 0
+            self.update_score()
+            self._new_game.unpress()
+            return
         if event.type == pygame.KEYDOWN and event.key == pygame.K_RIGHT:
             self.move_right()
             if RIGHT_AVAILABLE != 0:
@@ -274,4 +289,5 @@ class Board:
                 self._game_is_over = False
                 self._exit_game = False
                 self._score = 0
+                self.update_score()
                 popup.ACTION = None

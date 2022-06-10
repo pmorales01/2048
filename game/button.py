@@ -1,7 +1,7 @@
 import pygame
 
 class Button:
-    def __init__(self, center, screen, value, text, width=100, height=50, color=(255, 0, 0)):
+    def __init__(self, center, screen, value, text, width=100, height=50, color=(255, 0, 0), border_on=True):
         self._center = center
         self._screen = screen
         self._width = width
@@ -9,6 +9,7 @@ class Button:
         self._color = color
         self._original_color = color
         self._value = value
+        self._border_on = border_on
         font = pygame.font.Font(None, self._height)
         self._text = font.render(text, True, (255, 255, 255))
         self._textpos = self._text.get_rect()
@@ -39,7 +40,8 @@ class Button:
     def draw(self, surface):
         pygame.draw.rect(surface, self._color, self.rect, self._width, 10)
         surface.blit(self._text, self._textpos)
-        self.draw_border(surface)
+        if self._border_on:
+            self.draw_border(surface)
 
     def change_color(self, color):
         self._color = color
