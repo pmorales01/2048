@@ -54,6 +54,13 @@ class Board:
                 self._positions[i][j] = (x_coord, y_coord)
                 y_pos += step
             y_pos = 150 + step
+    def draw_title(self):
+        font = pygame.font.Font(None, 150)
+        text = font.render("2048", True, (124,103,83))
+        textpos = text.get_rect()
+        textpos.centerx = 250
+        textpos.centery = 85
+        self._screen.blit(text, textpos)
 
     def draw_score(self):
         font = pygame.font.Font(None, 25)
@@ -81,6 +88,7 @@ class Board:
                 self._tiles[i][j].draw(self._screen)
 
         self.draw_score()
+        self.draw_title()
 
         self._new_game.draw(self._screen)
 
@@ -244,11 +252,9 @@ class Board:
             self._tiles[i][j].update_value(2, (119, 110, 101))
 
         if len(empty_tiles) <= 1:
-            print("board is full")
             self.check_available_moves()
             if RIGHT_AVAILABLE == 0 and LEFT_AVAILABLE == 0 and \
                 UP_AVAILABLE == 0 and DOWN_AVAILABLE == 0:
-                print("Game Over")
                 self._game_is_over = True
 
     @property
