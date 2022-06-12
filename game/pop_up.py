@@ -4,18 +4,18 @@ from .button import Button
 ACTION = None
 
 class PopUp:
-    def __init__(self, screen, message, position, size=(400, 300)):
+    def __init__(self, screen, message, position, size=(600, 600)):
         self._screen = screen
         self._message = message
         self._buttons = []
         self._position = position
         self._size = size
         self._color = (191, 228, 252)
-        font = pygame.font.Font(None, 50)
-        self._text = font.render(message, True, (255, 255, 255))
+        font = pygame.font.Font(None, 125)
+        self._text = font.render(message, True, (99,91,82))
         self._textpos = self._text.get_rect()
         self._textpos.centerx = self.rect.centerx
-        self._textpos.centery = self.rect.centery
+        self._textpos.centery = self.rect.centery - 65
 
     @property
     def rect(self):
@@ -25,13 +25,11 @@ class PopUp:
         top = y - height // 2
         return pygame.Rect(left, top, width, height)
 
-    def draw_border(self):
-        pygame.draw.rect(self._screen, (0, 0, 0), self.rect, self._size[0] // 100, 10)
-
     def draw(self):
-        pygame.draw.rect(self._screen, self._color, self.rect, self._size[0], 10)
+        surface = pygame.Surface(pygame.Rect(self.rect).size, pygame.SRCALPHA)
+        pygame.draw.rect(surface, (191, 228, 252, 60), surface.get_rect())
+        self._screen.blit(surface, self.rect)
         self._screen.blit(self._text, self._textpos)
-        self.draw_border()
         for button in self._buttons:
             button.draw(self._screen)
 

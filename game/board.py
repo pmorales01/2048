@@ -18,9 +18,9 @@ class Board:
         self._size = size
         self._tiles = [[None for x in range(self._size)] for x in range(self._size)]
         self._positions = [[None for x in range(self._size)] for x in range(self._size)]
-        self._popup = PopUp(self._screen, "GAME OVER", (400, 400))
-        self._popup.add_button(Button((350, 525), self._screen, "quit", "Quit"))
-        self._popup.add_button(Button((550, 525), self._screen, "retry", "Retry"))
+        self._popup = PopUp(self._screen, "GAME OVER", (400, 450))
+        self._popup.add_button(Button((350, 575), self._screen, "quit", "Quit"))
+        self._popup.add_button(Button((550, 575), self._screen, "retry", "Retry"))
         self._game_is_over = False
         self._exit_game = False
         self._score = 0
@@ -109,7 +109,6 @@ class Board:
         tile_2 = self._tiles[random.choice(range(self._size))][random.choice(range(self._size))]
 
         while tile_1.center == tile_2.center:
-            print("we are the same")
             tile_1 = self._tiles[random.choice(range(self._size))][random.choice(range(self._size))]
             tile_2 = self._tiles[random.choice(range(self._size))][random.choice(range(self._size))]
 
