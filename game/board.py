@@ -158,10 +158,12 @@ class Board:
         n = self.calculate_n(other.value + current.value) - 2
 
         if n >= len(COLORS):
-            n = len(COLORS) - 1
+            n = n % len(COLORS)
 
         self._score += other.value + current.value
+
         self.update_score()
+
         color_pair = COLORS[n]
         other.update_value((other.value + current.value), color_pair[1])
         other.update_color(color_pair[0])
