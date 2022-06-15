@@ -8,6 +8,7 @@ from pygame.locals import *
 from .tile import Tile
 from .board import Board
 
+# global variable to track the size of the game board to use
 BOARD_SIZE = None
 
 class Scene:
@@ -30,6 +31,7 @@ class Scene:
             sys.exit(0)
 
 class TitleScene(Scene):
+    """Class used to create a Title Scene."""
     def __init__(self, screen, background_color):
         """Initialize the scene that runs the Title Screen."""
         self._frame_rate = 60
@@ -75,8 +77,9 @@ class TitleScene(Scene):
                 BOARD_SIZE = button.value
 
 class VideoGameScene(Scene):
+    """Class used to create an instance of 2048."""
     def __init__(self, screen):
-        """Initialize the scene that runs the Game."""
+        """Initialize the scene that runs the game."""
         self._board_size = BOARD_SIZE
         self._screen = screen
         self._scene_is_running = True
