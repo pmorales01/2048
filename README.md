@@ -24,16 +24,21 @@ If the board becomes too full, try to get rid of some tiles, if you can't, GAME 
 ## Installation Instructions
 Download the repository
 
+```
 git clone https://github.com/pmorales01/2048.git
+```
 
 Install Pygame
-
+```
 pip install pygame
+```
 
 Go to the repo folder
-
+```
 cd 2048/
+```
 
 Execute run.py to play the game
-
+```
 ./run.py
+```
